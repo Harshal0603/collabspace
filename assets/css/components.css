@@ -1,0 +1,729 @@
+/* ==========================================================
+   Material You (Material 3) Component Specifications
+   Pill Buttons, Tonal Inputs, Cards, Chips, Kanban, Modals
+   ========================================================== */
+
+/* ==========================================================
+   1. BUTTONS (All Pill Shaped)
+   ========================================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: var(--md-radius-full);
+  font: var(--md-type-label-m);
+  letter-spacing: 0.01em;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  position: relative;
+  overflow: hidden;
+  height: 40px;
+  padding: 0 24px;
+  transition: transform var(--md-duration-micro) var(--md-ease),
+              box-shadow var(--md-duration-standard) var(--md-ease),
+              background-color var(--md-duration-micro) var(--md-ease);
+  user-select: none;
+}
+
+.btn:active {
+  transform: scale(0.95);
+}
+
+.btn--sm {
+  height: 36px;
+  padding: 0 16px;
+  font: var(--md-type-label-s);
+}
+
+.btn--lg {
+  height: 48px;
+  padding: 0 32px;
+  font: var(--md-type-label-m);
+}
+
+/* State Layer Overlay */
+.btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-color: currentColor;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--md-duration-micro) var(--md-ease);
+}
+
+.btn:hover::before {
+  opacity: 0.08;
+}
+
+.btn:active::before {
+  opacity: 0.16;
+}
+
+/* Variants */
+.btn--filled {
+  background-color: var(--md-primary);
+  color: var(--md-on-primary);
+  box-shadow: var(--md-elev-1);
+}
+
+.btn--filled:hover {
+  box-shadow: var(--md-elev-2);
+}
+
+.btn--tonal {
+  background-color: var(--md-secondary-container);
+  color: var(--md-on-secondary-container);
+}
+
+.btn--outlined {
+  background-color: transparent;
+  color: var(--md-primary);
+  border: 1px solid var(--md-outline);
+}
+
+.btn--text {
+  background-color: transparent;
+  color: var(--md-primary);
+  padding: 0 16px;
+}
+
+.btn--danger {
+  background-color: var(--md-error);
+  color: var(--md-on-error);
+}
+
+/* Floating Action Button (FAB) */
+.fab {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--md-radius-xl);
+  background-color: var(--md-tertiary);
+  color: var(--md-on-tertiary);
+  box-shadow: var(--md-elev-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  z-index: 95;
+  transition: transform var(--md-duration-micro) var(--md-ease),
+              box-shadow var(--md-duration-standard) var(--md-ease);
+}
+
+.fab:hover {
+  transform: scale(1.05);
+  box-shadow: var(--md-elev-3);
+}
+
+.fab:active {
+  transform: scale(0.95);
+}
+
+/* Icon button */
+.btn-icon {
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: var(--md-radius-full);
+  background: transparent;
+  border: none;
+  color: var(--md-on-surface-variant);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  transition: background-color var(--md-duration-micro) var(--md-ease),
+              transform var(--md-duration-micro) var(--md-ease);
+}
+
+.btn-icon:hover {
+  background-color: var(--md-surface-container-high);
+  color: var(--md-on-surface);
+}
+
+.btn-icon:active {
+  transform: scale(0.92);
+}
+
+/* ==========================================================
+   2. CARDS
+   ========================================================== */
+.card {
+  background-color: var(--md-surface-container);
+  border-radius: var(--md-radius-lg);
+  border: none;
+  padding: 24px 28px;
+  box-shadow: var(--md-elev-1);
+  transition: transform var(--md-duration-standard) var(--md-ease),
+              box-shadow var(--md-duration-standard) var(--md-ease);
+  position: relative;
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: scale(1.02);
+  box-shadow: var(--md-elev-2);
+}
+
+/* Asymmetric Elevation for Active/Featured Cards */
+.card--active-featured {
+  transform: translateY(-8px);
+  box-shadow: var(--md-elev-3);
+  outline: 2px solid var(--md-primary);
+  outline-offset: -2px;
+}
+
+.card--active-featured:hover {
+  transform: translateY(-10px) scale(1.01);
+}
+
+/* Stat card with reveal glow */
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stat-card__glow {
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--md-primary) 0%, transparent 70%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--md-duration-standard) var(--md-ease);
+}
+
+.stat-card:hover .stat-card__glow {
+  opacity: 0.35;
+}
+
+.stat-card__value {
+  font: var(--md-type-headline-l);
+  color: var(--md-primary);
+  font-weight: 700;
+}
+
+.stat-card__label {
+  font: var(--md-type-body-s);
+  color: var(--md-on-surface-variant);
+}
+
+/* ==========================================================
+   3. INPUTS (M3 Filled Text Field)
+   ========================================================== */
+.input-field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.input-field__label {
+  font: var(--md-type-label-s);
+  color: var(--md-on-surface-variant);
+  margin-bottom: 6px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.input-field__control {
+  background-color: var(--md-surface-container-low);
+  height: 56px;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border: none;
+  border-bottom: 2px solid var(--md-outline);
+  padding: 0 16px;
+  font: var(--md-type-body-m);
+  color: var(--md-on-surface);
+  transition: border-bottom-color var(--md-duration-micro) var(--md-ease),
+              background-color var(--md-duration-micro) var(--md-ease);
+  width: 100%;
+}
+
+.input-field__control:focus {
+  outline: none;
+  border-bottom: 2px solid var(--md-primary);
+  background-color: var(--md-surface-container);
+}
+
+textarea.input-field__control {
+  height: auto;
+  min-height: 96px;
+  padding: 14px 16px;
+  resize: vertical;
+}
+
+select.input-field__control {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22%2379747E%22%3E%3Cpath%20d%3D%22M7%2010l5%205%205-5z%22%2F%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+}
+
+.input-field__hint {
+  font: var(--md-type-label-s);
+  color: var(--md-on-surface-variant);
+  margin-top: 4px;
+}
+
+.input-field__error {
+  font: var(--md-type-label-s);
+  color: var(--md-error);
+  margin-top: 4px;
+}
+
+/* ==========================================================
+   4. CHIPS & BADGES
+   ========================================================== */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: var(--md-radius-full);
+  font: var(--md-type-label-s);
+  font-weight: 500;
+  background-color: var(--md-secondary-container);
+  color: var(--md-on-secondary-container);
+}
+
+.chip .material-symbols-rounded {
+  font-size: 16px;
+}
+
+/* Priority chips */
+.chip--priority-low {
+  background-color: var(--md-secondary-container);
+  color: var(--md-on-secondary-container);
+}
+
+.chip--priority-medium {
+  background-color: var(--md-tertiary-container);
+  color: var(--md-on-tertiary-container);
+}
+
+.chip--priority-high {
+  background-color: var(--md-error-container);
+  color: var(--md-on-error-container);
+}
+
+.badge-unread {
+  background-color: var(--md-error);
+  color: var(--md-on-error);
+  font: var(--md-type-label-s);
+  font-weight: 700;
+  border-radius: var(--md-radius-full);
+  padding: 2px 7px;
+  min-width: 18px;
+  text-align: center;
+  position: absolute;
+  top: 4px;
+  right: 4px;
+}
+
+/* User avatar pill/circle */
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  font-weight: 500;
+  font-size: 14px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.avatar--sm {
+  width: 28px;
+  height: 28px;
+  font-size: 12px;
+}
+
+.avatar--lg {
+  width: 48px;
+  height: 48px;
+  font-size: 18px;
+}
+
+/* ==========================================================
+   5. KANBAN BOARD SYSTEM
+   ========================================================== */
+.kanban-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  align-items: flex-start;
+  min-height: 600px;
+}
+
+@media (max-width: 992px) {
+  .kanban-board {
+    grid-template-columns: 1fr;
+  }
+}
+
+.kanban-column {
+  background-color: var(--md-surface-container-low);
+  border-radius: var(--md-radius-lg);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: background-color var(--md-duration-micro) var(--md-ease),
+              outline var(--md-duration-micro) var(--md-ease);
+  min-height: 400px;
+}
+
+/* Drop zone highlight */
+.kanban-column.drag-over {
+  background-color: var(--md-primary-container);
+  outline: 2px dashed var(--md-primary);
+}
+
+.kanban-column__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--md-outline-variant);
+}
+
+.kanban-column__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font: var(--md-type-title-m);
+}
+
+.kanban-column__count {
+  background-color: var(--md-surface-container-highest);
+  color: var(--md-on-surface-variant);
+  border-radius: var(--md-radius-full);
+  padding: 2px 8px;
+  font: var(--md-type-label-s);
+}
+
+.kanban-task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 120px;
+}
+
+/* Task card */
+.task-card {
+  background-color: var(--md-surface-container);
+  border-radius: var(--md-radius-md);
+  padding: 16px 18px;
+  box-shadow: var(--md-elev-1);
+  cursor: grab;
+  position: relative;
+  transition: transform var(--md-duration-micro) var(--md-ease),
+              box-shadow var(--md-duration-micro) var(--md-ease);
+  user-select: none;
+}
+
+.task-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--md-elev-2);
+}
+
+.task-card.dragging {
+  opacity: 0.6;
+  cursor: grabbing;
+  transform: rotate(2deg) scale(1.03);
+  box-shadow: var(--md-elev-3);
+}
+
+.task-card__project {
+  font: var(--md-type-label-s);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.task-card__project-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.task-card__title {
+  font: var(--md-type-title-m);
+  margin-bottom: 6px;
+}
+
+.task-card__desc {
+  font: var(--md-type-body-s);
+  color: var(--md-on-surface-variant);
+  margin-bottom: 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.task-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 10px;
+  border-top: 1px solid var(--md-surface-container-highest);
+}
+
+.task-card__badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.task-card__actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ==========================================================
+   6. DIALOGS / MODALS
+   ========================================================== */
+.modal-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  opacity: 0;
+  transition: opacity var(--md-duration-surface) var(--md-ease);
+}
+
+.modal-backdrop.active {
+  display: flex;
+  opacity: 1;
+}
+
+.modal-dialog {
+  background-color: var(--md-surface-container);
+  border-radius: var(--md-radius-xl);
+  padding: 32px 36px;
+  max-width: 540px;
+  width: 100%;
+  box-shadow: var(--md-elev-3);
+  transform: scale(0.92);
+  transition: transform var(--md-duration-surface) var(--md-ease);
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.modal-backdrop.active .modal-dialog {
+  transform: scale(1);
+}
+
+.modal-dialog__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.modal-dialog__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+/* ==========================================================
+   7. TOASTS / SNACKBARS
+   ========================================================== */
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 300;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.toast {
+  background-color: var(--md-inverse-surface);
+  color: var(--md-inverse-on-surface);
+  border-radius: var(--md-radius-sm);
+  padding: 14px 24px;
+  font: var(--md-type-body-m);
+  box-shadow: var(--md-elev-3);
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  pointer-events: auto;
+  transform: translateY(20px);
+  opacity: 0;
+  transition: transform var(--md-duration-standard) var(--md-ease),
+              opacity var(--md-duration-standard) var(--md-ease);
+}
+
+.toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.toast--success .material-symbols-rounded {
+  color: var(--md-success);
+}
+.toast--error .material-symbols-rounded {
+  color: var(--md-error);
+}
+
+/* ==========================================================
+   8. LOADING SKELETONS & EMPTY STATES
+   ========================================================== */
+.skeleton {
+  background: linear-gradient(90deg, 
+    var(--md-surface-container-high) 25%, 
+    var(--md-surface-container-highest) 50%, 
+    var(--md-surface-container-high) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeletonPulse 1.5s infinite var(--md-ease);
+  border-radius: var(--md-radius-xs);
+}
+
+@keyframes skeletonPulse {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 48px 24px;
+  gap: 16px;
+  color: var(--md-on-surface-variant);
+}
+
+.empty-state svg {
+  width: 140px;
+  height: 140px;
+  opacity: 0.8;
+}
+
+/* ==========================================================
+   9. TEAM CHAT WIDGET
+   ========================================================== */
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 520px;
+  background-color: var(--md-surface-container);
+  border-radius: var(--md-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--md-elev-1);
+}
+
+.chat-header {
+  padding: 16px 20px;
+  background-color: var(--md-surface-container-high);
+  border-bottom: 1px solid var(--md-outline-variant);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chat-messages {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.chat-bubble {
+  display: flex;
+  gap: 12px;
+  max-width: 80%;
+}
+
+.chat-bubble--me {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+
+.chat-bubble__content {
+  background-color: var(--md-surface-container-high);
+  padding: 12px 16px;
+  border-radius: var(--md-radius-md);
+  color: var(--md-on-surface);
+}
+
+.chat-bubble--me .chat-bubble__content {
+  background-color: var(--md-primary-container);
+  color: var(--md-on-primary-container);
+}
+
+.chat-bubble__meta {
+  font: var(--md-type-label-s);
+  color: var(--md-on-surface-variant);
+  margin-bottom: 4px;
+}
+
+.chat-input-bar {
+  padding: 12px 16px;
+  background-color: var(--md-surface-container-high);
+  border-top: 1px solid var(--md-outline-variant);
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.chat-input-bar input {
+  flex: 1;
+  height: 44px;
+  background-color: var(--md-surface-container-low);
+  border-radius: var(--md-radius-full);
+  border: 1px solid var(--md-outline-variant);
+  padding: 0 18px;
+  font: var(--md-type-body-m);
+  color: var(--md-on-surface);
+}
+
+.chat-input-bar input:focus {
+  outline: none;
+  border-color: var(--md-primary);
+}

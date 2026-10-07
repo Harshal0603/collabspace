@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workspace & Team Chat &bull; CollabSpace</title>
+  <!-- Google Fonts: Roboto & Material Symbols -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0">
+
+  <!-- Material You CSS Architecture -->
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/layout.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+</head>
+<body>
+
+  <!-- Organic Blur Backdrop -->
+  <div class="organic-backdrop" aria-hidden="true">
+    <div class="organic-blob organic-blob--primary"></div>
+    <div class="organic-blob organic-blob--secondary"></div>
+    <div class="organic-blob organic-blob--tertiary"></div>
+  </div>
+
+  <!-- Mobile Drawer Backdrop -->
+  <div class="drawer-backdrop"></div>
+
+  <!-- Top App Bar -->
+  <header class="top-app-bar">
+    <div class="top-app-bar__start">
+      <button class="btn-icon" id="btn-toggle-drawer" aria-label="Open navigation menu">
+        <span class="material-symbols-rounded">menu</span>
+      </button>
+      <a href="dashboard.html" class="top-app-bar__brand">
+        <div class="top-app-bar__logo-icon">
+          <span class="material-symbols-rounded">hub</span>
+        </div>
+        <span>CollabSpace</span>
+      </a>
+      <button class="workspace-selector-btn" id="top-bar-workspace-selector" aria-label="Select workspace">
+        <span class="material-symbols-rounded">domain</span>
+        <span>Loading...</span>
+        <span class="material-symbols-rounded">arrow_drop_down</span>
+      </button>
+    </div>
+
+    <div class="top-app-bar__end">
+      <!-- Dark Mode Toggle -->
+      <button class="btn-icon" data-action="toggle-theme" aria-label="Toggle dark mode">
+        <span class="material-symbols-rounded" data-theme-icon>dark_mode</span>
+      </button>
+
+      <!-- Notification Bell -->
+      <button class="btn-icon" id="btn-open-notifications" aria-label="View notifications">
+        <span class="material-symbols-rounded">notifications</span>
+        <span class="badge-unread" id="notif-badge" style="display: none;">0</span>
+      </button>
+
+      <!-- User Profile Badge -->
+      <div id="top-bar-user-badge" style="display: flex; align-items: center; gap: 8px;">
+        <div class="avatar avatar--sm" style="background-color: var(--md-primary);">?</div>
+      </div>
+
+      <!-- Logout -->
+      <button class="btn-icon" data-action="logout" title="Log out" aria-label="Log out">
+        <span class="material-symbols-rounded">logout</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- App Shell -->
+  <div class="app-shell">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar__section-title">Navigation</div>
+      <ul class="nav-list">
+        <li>
+          <a href="dashboard.html" class="nav-item">
+            <span class="material-symbols-rounded">dashboard</span>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a href="board.html" class="nav-item">
+            <span class="material-symbols-rounded">view_kanban</span>
+            <span>Kanban Board</span>
+          </a>
+        </li>
+        <li>
+          <a href="workspace.html" class="nav-item active">
+            <span class="material-symbols-rounded">group</span>
+            <span>Workspace & Chat</span>
+          </a>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="main-wrapper">
+      <main class="main-content">
+        <!-- Workspace Header Banner -->
+        <div class="hero-container" style="padding: 32px 36px; margin-bottom: 24px;">
+          <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+                <h1 class="type-headline-m" id="ws-page-title">Workspace Details</h1>
+                <span class="chip" id="ws-page-role-chip">MEMBER</span>
+              </div>
+              <p class="type-body-m" id="ws-page-desc" style="color: var(--md-on-surface-variant); max-width: 650px;"></p>
+            </div>
+            <div style="display: flex; gap: 10px;">
+              <button class="btn btn--tonal" id="btn-invite-member">
+                <span class="material-symbols-rounded">person_add</span> Invite Teammate
+              </button>
+              <button class="btn btn--outlined" id="btn-edit-workspace-settings">
+                <span class="material-symbols-rounded">settings</span> Settings
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2-Column Layout: Left = Members & Projects; Right = Team Chat -->
+        <div style="display: grid; grid-template-columns: 1fr 1.1fr; gap: 24px;" class="workspace-grid-layout">
+          <!-- Left Column -->
+          <div style="display: flex; flex-direction: column; gap: 24px;">
+            <!-- Members Card -->
+            <div class="card">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+                <h2 class="type-title-m" style="display: flex; align-items: center; gap: 8px;">
+                  <span class="material-symbols-rounded">group</span> Team Members
+                </h2>
+                <span class="chip chip--priority-low" id="members-count-badge">0 Members</span>
+              </div>
+              <div id="members-list-container" style="display: flex; flex-direction: column; gap: 8px;"></div>
+            </div>
+
+            <!-- Projects Management Card -->
+            <div class="card">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+                <h2 class="type-title-m" style="display: flex; align-items: center; gap: 8px;">
+                  <span class="material-symbols-rounded">folder_special</span> Projects
+                </h2>
+                <button class="btn btn--tonal btn--sm" onclick="UI.openModal('modal-add-project')">
+                  <span class="material-symbols-rounded">add</span> New
+                </button>
+              </div>
+              <div id="projects-list-container" style="display: flex; flex-direction: column; gap: 10px;"></div>
+            </div>
+          </div>
+
+          <!-- Right Column: Live Team Chat Widget -->
+          <div>
+            <div class="chat-container">
+              <div class="chat-header">
+                <div>
+                  <div style="font-weight: 600; font-size: 16px; display: flex; align-items: center; gap: 8px;">
+                    <span class="material-symbols-rounded" style="color: var(--md-primary);">forum</span>
+                    Workspace Team Chat
+                  </div>
+                  <div class="type-label-s" style="color: var(--md-on-surface-variant); margin-top: 2px;">
+                    Updates live via 3s polling
+                  </div>
+                </div>
+                <!-- Online presence badges -->
+                <div id="chat-presence-list" style="display: flex; gap: 6px; overflow-x: auto; max-width: 260px;"></div>
+              </div>
+
+              <!-- Message Stream -->
+              <div class="chat-messages" id="chat-messages-container"></div>
+
+              <!-- Chat Input Bar -->
+              <form class="chat-input-bar" id="chat-send-form">
+                <input type="text" id="chat-message-input" required placeholder="Type a message to the team..." autocomplete="off">
+                <button type="submit" class="btn btn--filled btn--sm" style="border-radius: var(--md-radius-full); padding: 0 20px;">
+                  <span class="material-symbols-rounded">send</span>
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- ==========================================================
+       MODALS
+       ========================================================== -->
+
+  <!-- Modal: Invite Member -->
+  <div class="modal-backdrop" id="modal-invite-member" role="dialog" aria-modal="true" aria-labelledby="modal-invite-title">
+    <div class="modal-dialog">
+      <div class="modal-dialog__header">
+        <h2 class="type-title-l" id="modal-invite-title">Invite Team Member</h2>
+        <button class="btn-icon" data-modal-close aria-label="Close dialog">
+          <span class="material-symbols-rounded">close</span>
+        </button>
+      </div>
+      <form id="form-invite-member">
+        <div class="input-field">
+          <label class="input-field__label" for="invite-email-input">Colleague Email *</label>
+          <input class="input-field__control" type="email" id="invite-email-input" required placeholder="teammate@company.com">
+          <span class="input-field__hint">If not registered, an account is auto-created with temporary password Test@1234.</span>
+        </div>
+
+        <div class="input-field">
+          <label class="input-field__label" for="invite-role-select">Workspace Role</label>
+          <select class="input-field__control" id="invite-role-select">
+            <option value="member" selected>Member (Can view, create and update tasks)</option>
+            <option value="admin">Admin (Can manage members and projects)</option>
+          </select>
+        </div>
+
+        <div class="modal-dialog__actions">
+          <button type="button" class="btn btn--text" data-modal-close>Cancel</button>
+          <button type="submit" class="btn btn--filled">Send Invite</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Edit Workspace Settings -->
+  <div class="modal-backdrop" id="modal-workspace-settings" role="dialog" aria-modal="true">
+    <div class="modal-dialog">
+      <div class="modal-dialog__header">
+        <h2 class="type-title-l">Workspace Settings</h2>
+        <button class="btn-icon" data-modal-close aria-label="Close dialog">
+          <span class="material-symbols-rounded">close</span>
+        </button>
+      </div>
+      <form id="form-update-workspace">
+        <div class="input-field">
+          <label class="input-field__label" for="settings-ws-name">Workspace Name *</label>
+          <input class="input-field__control" type="text" id="settings-ws-name" required>
+        </div>
+        <div class="input-field">
+          <label class="input-field__label" for="settings-ws-desc">Description</label>
+          <textarea class="input-field__control" id="settings-ws-desc"></textarea>
+        </div>
+        <div class="modal-dialog__actions">
+          <button type="button" class="btn btn--text" data-modal-close>Cancel</button>
+          <button type="submit" class="btn btn--filled">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Add Project -->
+  <div class="modal-backdrop" id="modal-add-project" role="dialog" aria-modal="true">
+    <div class="modal-dialog">
+      <div class="modal-dialog__header">
+        <h2 class="type-title-l">Create Project</h2>
+        <button class="btn-icon" data-modal-close aria-label="Close dialog">
+          <span class="material-symbols-rounded">close</span>
+        </button>
+      </div>
+      <form id="form-add-project">
+        <div class="input-field">
+          <label class="input-field__label" for="proj-name-input">Project Name *</label>
+          <input class="input-field__control" type="text" id="proj-name-input" required placeholder="e.g. Mobile App 2.0">
+        </div>
+        <div class="input-field">
+          <label class="input-field__label" for="proj-desc-input">Description</label>
+          <textarea class="input-field__control" id="proj-desc-input" placeholder="Project goals..."></textarea>
+        </div>
+        <div class="input-field">
+          <label class="input-field__label" for="proj-color-input">Color Tag</label>
+          <select class="input-field__control" id="proj-color-input">
+            <option value="#6750A4">Purple</option>
+            <option value="#7D5260">Rosewood</option>
+            <option value="#2E6C4D">Emerald</option>
+            <option value="#006874">Ocean Teal</option>
+          </select>
+        </div>
+        <div class="modal-dialog__actions">
+          <button type="button" class="btn btn--text" data-modal-close>Cancel</button>
+          <button type="submit" class="btn btn--filled">Save Project</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Switch Workspace -->
+  <div class="modal-backdrop" id="modal-switch-workspace" role="dialog" aria-modal="true">
+    <div class="modal-dialog">
+      <div class="modal-dialog__header">
+        <h2 class="type-title-l">Select Workspace</h2>
+        <button class="btn-icon" data-modal-close aria-label="Close dialog">
+          <span class="material-symbols-rounded">close</span>
+        </button>
+      </div>
+      <div id="workspace-switcher-list" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px;"></div>
+    </div>
+  </div>
+
+  <!-- Modal: Notifications -->
+  <div class="modal-backdrop" id="modal-notifications" role="dialog" aria-modal="true">
+    <div class="modal-dialog">
+      <div class="modal-dialog__header">
+        <h2 class="type-title-l">Notifications</h2>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <button class="btn btn--text btn--sm" id="btn-mark-all-read">Mark All Read</button>
+          <button class="btn-icon" data-modal-close aria-label="Close dialog">
+            <span class="material-symbols-rounded">close</span>
+          </button>
+        </div>
+      </div>
+      <div id="notif-items-list" style="max-height: 400px; overflow-y: auto;"></div>
+    </div>
+  </div>
+
+  <!-- JavaScript Modules -->
+  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/notifications.js"></script>
+  <script src="../assets/js/chat.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const authed = await App.initAuth(true);
+      if (!authed) return;
+
+      await Notifications.init();
+      const wsId = App.state.currentWorkspaceId;
+      if (!wsId) return;
+
+      Chat.init(wsId);
+      await loadWorkspaceOverview(wsId);
+      bindWorkspaceEvents(wsId);
+    });
+
+    async function loadWorkspaceOverview(wsId) {
+      const res = await App.apiFetch(`../api/workspaces.php?id=${wsId}`);
+      if (!res.success) return;
+
+      const ws = res.workspace;
+      document.getElementById('ws-page-title').textContent = ws.name;
+      document.getElementById('ws-page-desc').textContent = ws.description || 'No description provided';
+      document.getElementById('ws-page-role-chip').textContent = (ws.current_user_role || 'member').toUpperCase();
+      document.getElementById('settings-ws-name').value = ws.name;
+      document.getElementById('settings-ws-desc').value = ws.description || '';
+
+      renderMembersList(res.members || [], ws.current_user_role);
+      renderProjectsList(res.projects || [], ws.current_user_role);
+    }
+
+    function renderMembersList(members, myRole) {
+      const container = document.getElementById('members-list-container');
+      const badge = document.getElementById('members-count-badge');
+      if (badge) badge.textContent = `${members.length} Members`;
+
+      if (!container) return;
+
+      container.innerHTML = members.map(m => {
+        const isOnline = m.is_online == 1;
+        const canManage = (myRole === 'owner' || myRole === 'admin') && m.role !== 'owner' && m.user_id != App.state.user.id;
+
+        return `
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: var(--md-surface-container-low); border-radius: var(--md-radius-md);">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div class="avatar avatar--sm" style="background-color: ${m.avatar_color || '#6750A4'};">
+                ${UI.getInitials(m.name)}
+              </div>
+              <div>
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <span class="presence-dot ${isOnline ? 'presence-dot--online' : ''}"></span>
+                  <strong style="font-size: 14px;">${UI.escapeHtml(m.name)}</strong>
+                </div>
+                <div class="type-label-s" style="color: var(--md-on-surface-variant); font-size: 12px;">
+                  ${UI.escapeHtml(m.email)} &bull; Joined ${UI.formatRelativeTime(m.joined_at)}
+                </div>
+              </div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="chip ${m.role === 'owner' ? 'chip--priority-high' : (m.role === 'admin' ? 'chip--priority-medium' : 'chip--priority-low')}" style="font-size: 11px;">
+                ${m.role.toUpperCase()}
+              </span>
+              ${canManage ? `
+                <button class="btn-icon" style="width: 32px; height: 32px;" title="Remove member" onclick="removeMember(${m.user_id}, '${UI.escapeHtml(m.name)}')">
+                  <span class="material-symbols-rounded" style="font-size: 18px; color: var(--md-error);">person_remove</span>
+                </button>
+              ` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderProjectsList(projects, myRole) {
+      const container = document.getElementById('projects-list-container');
+      if (!container) return;
+
+      if (projects.length === 0) {
+        container.innerHTML = '<p class="type-body-s" style="color: var(--md-on-surface-variant);">No projects yet.</p>';
+        return;
+      }
+
+      container.innerHTML = projects.map(p => {
+        const canDelete = myRole === 'owner' || myRole === 'admin';
+        return `
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: var(--md-surface-container-low); border-radius: var(--md-radius-md);">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="width: 10px; height: 10px; border-radius: 50%; background-color: ${p.color || '#6750A4'};"></span>
+              <div>
+                <strong style="font-size: 14px;">${UI.escapeHtml(p.name)}</strong>
+                <div class="type-label-s" style="color: var(--md-on-surface-variant); font-size: 12px;">
+                  ${p.task_count || 0} tasks &bull; ${p.completed_task_count || 0} completed
+                </div>
+              </div>
+            </div>
+            <div style="display: flex; gap: 4px;">
+              <a href="board.html?project_id=${p.id}" class="btn-icon" style="width: 32px; height: 32px;" title="View board">
+                <span class="material-symbols-rounded" style="font-size: 18px;">view_kanban</span>
+              </a>
+              ${canDelete ? `
+                <button class="btn-icon" style="width: 32px; height: 32px;" title="Delete project" onclick="deleteProject(${p.id}, '${UI.escapeHtml(p.name)}')">
+                  <span class="material-symbols-rounded" style="font-size: 18px; color: var(--md-error);">delete</span>
+                </button>
+              ` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function bindWorkspaceEvents(wsId) {
+      // Invite Button
+      document.getElementById('btn-invite-member')?.addEventListener('click', () => {
+        UI.openModal('modal-invite-member');
+      });
+
+      // Settings Button
+      document.getElementById('btn-edit-workspace-settings')?.addEventListener('click', () => {
+        UI.openModal('modal-workspace-settings');
+      });
+
+      // Invite Form Submit
+      document.getElementById('form-invite-member')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('invite-email-input').value.trim();
+        const role = document.getElementById('invite-role-select').value;
+
+        const res = await App.apiFetch('../api/members.php?action=invite', {
+          method: 'POST',
+          body: { workspace_id: wsId, email, role }
+        });
+
+        if (res.success) {
+          UI.showToast(res.message || 'Invitation sent successfully!', 'success');
+          UI.closeModal('modal-invite-member');
+          document.getElementById('form-invite-member').reset();
+          loadWorkspaceOverview(wsId);
+        } else {
+          UI.showToast(res.error || 'Failed to invite user', 'error');
+        }
+      });
+
+      // Settings Form Submit
+      document.getElementById('form-update-workspace')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = document.getElementById('settings-ws-name').value.trim();
+        const desc = document.getElementById('settings-ws-desc').value.trim();
+
+        const res = await App.apiFetch('../api/workspaces.php?action=update', {
+          method: 'POST',
+          body: { workspace_id: wsId, name, description: desc }
+        });
+
+        if (res.success) {
+          UI.showToast('Workspace settings saved!', 'success');
+          UI.closeModal('modal-workspace-settings');
+          loadWorkspaceOverview(wsId);
+        } else {
+          UI.showToast(res.error || 'Failed to update workspace', 'error');
+        }
+      });
+
+      // Add Project Form Submit
+      document.getElementById('form-add-project')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = document.getElementById('proj-name-input').value.trim();
+        const desc = document.getElementById('proj-desc-input').value.trim();
+        const color = document.getElementById('proj-color-input').value;
+
+        const res = await App.apiFetch('../api/projects.php?action=create', {
+          method: 'POST',
+          body: { workspace_id: wsId, name, description: desc, color }
+        });
+
+        if (res.success) {
+          UI.showToast('Project created!', 'success');
+          UI.closeModal('modal-add-project');
+          document.getElementById('form-add-project').reset();
+          loadWorkspaceOverview(wsId);
+        } else {
+          UI.showToast(res.error || 'Failed to create project', 'error');
+        }
+      });
+    }
+
+    async function removeMember(targetUserId, name) {
+      if (!confirm(`Are you sure you want to remove ${name} from this workspace?`)) return;
+      const wsId = App.state.currentWorkspaceId;
+      const res = await App.apiFetch('../api/members.php?action=remove', {
+        method: 'POST',
+        body: { workspace_id: wsId, user_id: targetUserId }
+      });
+      if (res.success) {
+        UI.showToast(`Removed ${name}`, 'success');
+        loadWorkspaceOverview(wsId);
+      } else {
+        UI.showToast(res.error || 'Failed to remove member', 'error');
+      }
+    }
+
+    async function deleteProject(projId, name) {
+      if (!confirm(`Are you sure you want to delete project "${name}" and all its tasks?`)) return;
+      const res = await App.apiFetch('../api/projects.php?action=delete', {
+        method: 'POST',
+        body: { project_id: projId }
+      });
+      if (res.success) {
+        UI.showToast(`Project "${name}" deleted`, 'success');
+        loadWorkspaceOverview(App.state.currentWorkspaceId);
+      } else {
+        UI.showToast(res.error || 'Failed to delete project', 'error');
+      }
+    }
+  </script>
+</body>
+</html>

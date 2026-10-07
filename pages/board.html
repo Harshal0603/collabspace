@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kanban Board &bull; CollabSpace</title>
+  <!-- Google Fonts: Roboto & Material Symbols -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0">
+
+  <!-- Material You CSS Architecture -->
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+  <link rel="stylesheet" href="../assets/css/base.css">
+  <link rel="stylesheet" href="../assets/css/layout.css">
+  <link rel="stylesheet" href="../assets/css/components.css">
+</head>
+<body>
+
+  <!-- Organic Blur Backdrop -->
+  <div class="organic-backdrop" aria-hidden="true">
+    <div class="organic-blob organic-blob--primary"></div>
+    <div class="organic-blob organic-blob--secondary"></div>
+    <div class="organic-blob organic-blob--tertiary"></div>
+  </div>
+
+  <!-- Mobile Drawer Backdrop -->
+  <div class="drawer-backdrop"></div>
+
+  <!-- Top App Bar -->
+  <header class="top-app-bar">
+    <div class="top-app-bar__start">
+      <button class="btn-icon" id="btn-toggle-drawer" aria-label="Open navigation menu">
+        <span class="material-symbols-rounded">menu</span>
+      </button>
+      <a href="dashboard.html" class="top-app-bar__brand">
+        <div class="top-app-bar__logo-icon">
+          <span class="material-symbols-rounded">hub</span>
+        </div>
+        <span>CollabSpace</span>
+      </a>
+      <button class="workspace-selector-btn" id="top-bar-workspace-selector" aria-label="Select workspace">
+        <span class="material-symbols-rounded">domain</span>
+        <span>Loading...</span>
+        <span class="material-symbols-rounded">arrow_drop_down</span>
+      </button>
+    </div>
+
+    <div class="top-app-bar__end">
+      <!-- Dark Mode Toggle -->
+      <button class="btn-icon" data-action="toggle-theme" aria-label="Toggle dark mode">
+        <span class="material-symbols-rounded" data-theme-icon>dark_mode</span>
+      </button>
+
+      <!-- Notification Bell -->
+      <button class="btn-icon" id="btn-open-notifications" aria-label="View notifications">
+        <span class="material-symbols-rounded">notifications</span>
+        <span class="badge-unread" id="notif-badge" style="display: none;">0</span>
+      </button>
+
+      <!-- User Profile Badge -->
+      <div id="top-bar-user-badge" style="display: flex; align-items: center; gap: 8px;">
+        <div class="avatar avatar--sm" style="background-color: var(--md-primary);">?</div>
+      </div>
+
+      <!-- Logout -->
+      <button class="btn-icon" data-action="logout" title="Log out" aria-label="Log out">
+        <span class="material-symbols-rounded">logout</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- App Shell -->
+  <div class="app-shell">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar__section-title">Navigation</div>
+      <ul class="nav-list">
+        <li>
+          <a href="dashboard.html" class="nav-item">
+            <span class="material-symbols-rounded">dashboard</span>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li>
+          <a href="board.html" class="nav-item active">
+            <span class="material-symbols-rounded">view_kanban</span>
+            <span>Kanban Board</span>
+          </a>
+        </li>
+        <li>
+          <a href="workspace.html" class="nav-item">
+            <span class="material-symbols-rounded">group</span>
+            <span>Workspace & Chat</span>
+          </a>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="main-wrapper">
+      <main class="main-content">
+        <!-- Board Header & Filter Toolbar -->
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 24px;">
+          <div>
+            <h1 class="type-headline-m" style="margin-bottom: 4px;">Kanban Task Board</h1>
+            <p class="type-body-s">Drag cards between stages or use keyboard shortcuts to reorder.</p>
+          </div>
+          <button class="btn btn--filled" id="btn-open-add-task">
+            <span class="material-symbols-rounded">add</span> New Task
+          </button>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="card" style="padding: 16px 20px; border-radius: var(--md-radius-lg); margin-bottom: 28px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
+          <!-- Search Input -->
+          <div style="flex: 1; min-width: 220px; position: relative;">
+            <input type="text" id="search-task-input" placeholder="Search tasks..." 
+                   style="width: 100%; height: 44px; background: var(--md-surface-container-low); border: none; border-radius: var(--md-radius-full); padding: 0 16px 0 42px; font: var(--md-type-body-m); color: var(--md-on-surface);">
+            <span class="material-symbols-rounded" style="position: absolute; left: 14px; top: 10px; color: var(--md-outline); font-size: 22px;">search</span>
+          </div>
+
+          <!-- Project Filter -->
+          <select id="filter-project-select" style="height: 44px; background: var(--md-surface-container-low); border: none; border-radius: var(--md-radius-full); padding: 0 28px 0 16px; font: var(--md-type-label-m); color: var(--md-on-surface);">
+            <option value="">All Projects</option>
+          </select>
+
+          <!-- Priority Filter -->
+          <select id="filter-priority-select" style="height: 44px; background: var(--md-surface-container-low); border: none; border-radius: var(--md-radius-full); padding: 0 28px 0 16px; font: var(--md-type-label-m); color: var(--md-on-surface);">
+            <option value="">All Priorities</option>
+            <option value="high">High Priority</option>
+            <option value="medium">Medium Priority</option>
+            <option value="low">Low Priority</option>
+          </select>
+
+          <!-- Assignee Filter -->
+          <select id="filter-assignee-select" style="height: 44px; background: var(--md-surface-container-low); border: none; border-radius: var(--md-radius-full); padding: 0 28px 0 16px; font: var(--md-type-label-m); color: var(--md-on-surface);">
+            <option value="">All Assignees</option>
+          </select>
+        </div>
+
+        <!-- 3-Column Kanban Board -->
+        <div class="kanban-board">
+          <!-- Column 1: To Do -->
+          <div class="kanban-column" id="kanban-col-todo" data-status="todo" role="region" aria-label="To Do tasks">
+            <div class="kanban-column__header">
+              <div class="kanban-column__title">
+                <span class="material-symbols-rounded" style="color: var(--md-primary);">radio_button_unchecked</span>
+                <span>To Do</span>
+              </div>
+              <span class="kanban-column__count" id="count-todo">0</span>
+            </div>
+            <div class="kanban-task-list" id="column-tasks-todo"></div>
+          </div>
+
+          <!-- Column 2: In Progress -->
+          <div class="kanban-column" id="kanban-col-in_progress" data-status="in_progress" role="region" aria-label="In Progress tasks">
+            <div class="kanban-column__header">
+              <div class="kanban-column__title">
+                <span class="material-symbols-rounded" style="color: var(--md-tertiary);">timelapse</span>
+                <span>In Progress</span>
+              </div>
+              <span class="kanban-column__count" id="count-in_progress">0</span>
+            </div>
+            <div class="kanban-task-list" id="column-tasks-in_progress"></div>
+          </div>
+
+          <!-- Column 3: Done -->
+          <div class="kanban-column" id="kanban-col-done" data-status="done" role="region" aria-label="Done tasks">
+            <div class="kanban-column__header">
+              <div class="kanban-column__title">
+                <span class="material-symbols-rounded" style="color: var(--md-success);">check_circle</span>
+                <span>Done</span>
+              </div>
+              <span class="kanban-column__count" id="count-done">0</span>
+            </div>
+            <div class="kanban-task-list" id="column-tasks-done"></div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- ==========================================================
+       MODALS
+       ========================================================== -->
+
+  <!-- Modal: Add Task -->
+  <div class="modal-backdrop" id="modal-add-task" role="dialog" aria-modal="true" aria-labelledby="modal-add-task-title">
+    <div class="modal-dialog">
+      <div class="modal-dialog__header">
+        <h2 class="type-title-l" id="modal-add-task-title">Create New Task</h2>
+        <button class="btn-icon" data-modal-close aria-label="Close dialog">
+          <span class="material-symbols-rounded">close</span>
+        </button>
+      </div>
+      <form id="form-add-task">
+        <div class="input-field">
+          <label class="input-field__label" for="modal-task-title">Task Title *</label>
+          <input class="input-field__control" type="text" id="modal-task-title" required placeholder="e.g. Audit accessibility">
+        </div>
+
+        <div class="input-field">
+          <label class="input-field__label" for="modal-task-project-select">Project *</label>
+          <select class="input-field__control" id="modal-task-project-select" required></select>
+        </div>
+
+        <div class="input-field">
+          <label class="input-field__label" for="modal-task-desc">Description</label>
+          <textarea class="input-field__control" id="modal-task-desc" placeholder="Details and specs..."></textarea>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div class="input-field">
+            <label class="input-field__label" for="modal-task-priority-select">Priority</label>
+            <select class="input-field__control" id="modal-task-priority-select">
+              <option value="low">Low</option>
+              <option value="medium" selected>Medium</option>
+              <option value="high">High</option>
+            </select>
+          </div>
+          <div class="input-field">
+            <label class="input-field__label" for="modal-task-due-date">Due Date</label>
+            <input class="input-field__control" type="date" id="modal-task-due-date">
+          </div>
+        </div>
+
+        <div class="input-field">
+          <label class="input-field__label" for="modal-task-assignee-select">Assignee</label>
+          <select class="input-field__control" id="modal-task-assignee-select"></select>
+        </div>
+
+        <div class="modal-dialog__actions">
+          <button type="button" class="btn btn--text" data-modal-close>Cancel</button>
+          <button type="submit" class="btn btn--filled">Create Task</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Task Detail & Comments Feed -->
+  <div class="modal-backdrop" id="modal-task-detail" role="dialog" aria-modal="true" aria-labelledby="detail-task-title">
+    <div class="modal-dialog" style="max-width: 620px;">
+      <div class="modal-dialog__header">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="chip chip--priority-medium" id="detail-task-priority">MEDIUM</span>
+          <span class="chip" id="detail-task-status" style="background-color: var(--md-surface-container-high);">TODO</span>
+        </div>
+        <div style="display: flex; gap: 4px;">
+          <button class="btn-icon" id="btn-delete-active-task" title="Delete Task" aria-label="Delete Task">
+            <span class="material-symbols-rounded" style="color: var(--md-error);">delete</span>
+          </button>
+          <button class="btn-icon" data-modal-close aria-label="Close dialog">
+            <span class="material-symbols-rounded">close</span>
+          </button>
+        </div>
+      </div>
+
+      <h2 class="type-headline-m" id="detail-task-title" style="margin-bottom: 8px;">Task Title</h2>
+      <div style="display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 20px; font-size: 13px; color: var(--md-on-surface-variant);">
+        <div><strong>Project:</strong> <span id="detail-task-project">General</span></div>
+        <div><strong>Due:</strong> <span id="detail-task-due">Nov 12</span></div>
+        <div><strong>Assignee:</strong> <span id="detail-task-assignee">Unassigned</span></div>
+      </div>
+
+      <div class="card" style="padding: 16px; background-color: var(--md-surface-container-low); border-radius: var(--md-radius-md); margin-bottom: 24px;">
+        <h3 class="type-label-s" style="color: var(--md-on-surface-variant); margin-bottom: 4px; text-transform: uppercase;">Description</h3>
+        <p class="type-body-m" id="detail-task-desc" style="white-space: pre-wrap; font-size: 14px;"></p>
+      </div>
+
+      <!-- Comments Thread -->
+      <h3 class="type-title-m" style="margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+        <span class="material-symbols-rounded">forum</span> Activity & Comments
+      </h3>
+      <div id="detail-task-comments" style="max-height: 220px; overflow-y: auto; margin-bottom: 16px;"></div>
+
+      <form id="form-add-comment" style="display: flex; gap: 8px;">
+        <input type="text" id="comment-input" required placeholder="Write a comment..." 
+               style="flex: 1; height: 44px; background: var(--md-surface-container-low); border: none; border-radius: var(--md-radius-full); padding: 0 18px; font: var(--md-type-body-m); color: var(--md-on-surface);">
+        <button type="submit" class="btn btn--filled btn--sm">
+          <span class="material-symbols-rounded">send</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Switch Workspace -->
+  <div class="modal-backdrop" id="modal-switch-workspace" role="dialog" aria-modal="true">
+    <div class="modal-dialog">
+      <div class="modal-dialog__header">
+        <h2 class="type-title-l">Select Workspace</h2>
+        <button class="btn-icon" data-modal-close aria-label="Close dialog">
+          <span class="material-symbols-rounded">close</span>
+        </button>
+      </div>
+      <div id="workspace-switcher-list" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px;"></div>
+    </div>
+  </div>
+
+  <!-- Modal: Notifications -->
+  <div class="modal-backdrop" id="modal-notifications" role="dialog" aria-modal="true">
+    <div class="modal-dialog">
+      <div class="modal-dialog__header">
+        <h2 class="type-title-l">Notifications</h2>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <button class="btn btn--text btn--sm" id="btn-mark-all-read">Mark All Read</button>
+          <button class="btn-icon" data-modal-close aria-label="Close dialog">
+            <span class="material-symbols-rounded">close</span>
+          </button>
+        </div>
+      </div>
+      <div id="notif-items-list" style="max-height: 400px; overflow-y: auto;"></div>
+    </div>
+  </div>
+
+  <!-- JavaScript Modules -->
+  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/js/app.js"></script>
+  <script src="../assets/js/notifications.js"></script>
+  <script src="../assets/js/kanban.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      Kanban.init();
+    });
+  </script>
+</body>
+</html>
